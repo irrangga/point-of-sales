@@ -22,9 +22,9 @@ func (pr ProductRepoStruct) AddProductRepo(prod models.Product) (models.Product,
 	return prod, nil
 }
 
-func (pr ProductRepoStruct) GetAllProductsRepo() ([]models.Product, error) {
+func (pr ProductRepoStruct) GetAllProductsRepo(id string) ([]models.Product, error) {
 	var prod []models.Product
-	err := pr.db.Debug().Find(&prod).Error
+	err := pr.db.Debug().Where("merchant_id = ?", id).Find(&prod).Error
 	if err != nil {
 		return nil, err
 	}

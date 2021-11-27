@@ -9,8 +9,9 @@ import (
 func AutoMigrate(db *gorm.DB) {
 	err := db.Debug().AutoMigrate(
 		models.Merchant{},
-		models.Product{},
 		models.Outlet{},
+		models.Product{},
+		models.Price{},
 	)
 
 	if err != nil {

@@ -21,8 +21,8 @@ func (pu ProductUsecaseStruct) AddProductUsecase(prod models.Product) (models.Pr
 	return productData, nil
 }
 
-func (pu ProductUsecaseStruct) GetAllProductsUsecase() ([]models.Product, error) {
-	productData, err := pu.prod.GetAllProductsRepo()
+func (pu ProductUsecaseStruct) GetAllProductsUsecase(id string) ([]models.Product, error) {
+	productData, err := pu.prod.GetAllProductsRepo(id)
 	if err != nil {
 		return nil, err
 	}

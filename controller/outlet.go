@@ -9,24 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ProductController struct {
-	prod usecase.ProductUsecaseInterface
+type OutletController struct {
+	out usecase.OutletUsecaseInterface
 }
 
-func NewProductControllerImpl(r *gin.RouterGroup, prod usecase.ProductUsecaseInterface) {
-	handler := ProductController{prod}
+func NewOutletControllerImpl(r *gin.RouterGroup, out usecase.OutletUsecaseInterface) {
+	handler := OutletController{out}
 
-	r.POST("/product/insert", handler.AddProductController)
-	r.GET("/list_products", handler.GetAllProductsController)
-	r.GET("/product/:id", handler.GetProductController)
-	r.PUT("/product/:id", handler.UpdateProductController)
-	r.DELETE("/product/:id", handler.DeleteProductController)
+	r.POST("/outlet/create", handler.AddOutletController)
+	r.GET("/list_outlets", handler.GetAllOutletsController)
+	r.GET("/outlet/:id", handler.GetOutletController)
+	r.PUT("/outlet/:id", handler.UpdateOutletController)
+	r.DELETE("/outlet/:id", handler.DeleteOutletController)
 }
 
-func (uc ProductController) AddProductController(c *gin.Context) {
-	var prod models.Product
+func (oc OutletController) AddOutletController(c *gin.Context) {
+	var out models.Outlet
 
-	if err := c.ShouldBindJSON(&prod); err != nil {
+	if err := c.ShouldBindJSON(&out); err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
 			Message: err.Error(),
@@ -34,7 +34,7 @@ func (uc ProductController) AddProductController(c *gin.Context) {
 		return
 	}
 
-	userData, err := uc.prod.AddProductUsecase(prod)
+	outletData, err := oc.out.AddOutletUsecase(out)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -47,15 +47,15 @@ func (uc ProductController) AddProductController(c *gin.Context) {
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    userData,
+		Data:    outletData,
 	}
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc ProductController) GetAllProductsController(c *gin.Context) {
+func (oc OutletController) GetAllOutletsController(c *gin.Context) {
 	id := c.Query("merchant_id")
 
-	userData, err := uc.prod.GetAllProductsUsecase(id)
+	outletData, err := oc.out.GetAllOutletsUsecase(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
@@ -67,17 +67,17 @@ func (uc ProductController) GetAllProductsController(c *gin.Context) {
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    userData,
+		Data:    outletData,
 	}
 
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc ProductController) GetProductController(c *gin.Context) {
-	var prod models.Product
+func (oc OutletController) GetOutletController(c *gin.Context) {
+	var out models.Outlet
 	id := c.Param("id")
 
-	userData, err := uc.prod.GetProductUsecase(prod, id)
+	outletData, err := oc.out.GetOutletUsecase(out, id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -90,50 +90,17 @@ func (uc ProductController) GetProductController(c *gin.Context) {
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    userData,
+		Data:    outletData,
 	}
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc ProductController) UpdateProductController(c *gin.Context) {
-	var prod models.Product
-	id := c.Param("id")
-	idInt, _ := strconv.Atoi(id)
-
-	err := c.ShouldBindJSON(&prod)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
-			Status:  http.StatusBadRequest,
-			Message: err.Error(),
-		})
-		return
-	}
-
-	userData, err := uc.prod.UpdateProductUsecase(prod, id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
-			Status:  http.StatusBadRequest,
-			Message: err.Error(),
-		})
-		return
-	}
-
-	userData.ID = idInt
-
-	response := models.ResponseCustom{
-		Status:  http.StatusOK,
-		Message: "success",
-		Data:    userData,
-	}
-	c.JSON(http.StatusOK, response)
-}
-
-func (uc ProductController) DeleteProductController(c *gin.Context) {
-	var prod models.Product
+func (oc OutletController) UpdateOutletController(c *gin.Context) {
+	var out models.Outlet
 	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
-	userData, err := uc.prod.DeleteProductUsecase(prod, id)
+	err := c.ShouldBindJSON(&out)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
@@ -142,12 +109,45 @@ func (uc ProductController) DeleteProductController(c *gin.Context) {
 		return
 	}
 
-	userData.ID = idInt
+	outletData, err := oc.out.UpdateOutletUsecase(out, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	outletData.ID = idInt
 
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    userData,
+		Data:    outletData,
+	}
+	c.JSON(http.StatusOK, response)
+}
+
+func (oc OutletController) DeleteOutletController(c *gin.Context) {
+	var out models.Outlet
+	id := c.Param("id")
+	idInt, _ := strconv.Atoi(id)
+
+	outletData, err := oc.out.DeleteOutletUsecase(out, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	outletData.ID = idInt
+
+	response := models.ResponseCustom{
+		Status:  http.StatusOK,
+		Message: "success",
+		Data:    outletData,
 	}
 	c.JSON(http.StatusOK, response)
 }

@@ -12,8 +12,16 @@ type UserRepoInterface interface {
 
 type ProductRepoInterface interface {
 	AddProductRepo(usr models.Product) (models.Product, error)
-	GetAllProductsRepo() ([]models.Product, error)
+	GetAllProductsRepo(id string) ([]models.Product, error)
 	GetProductRepo(usr models.Product, id string) (models.Product, error)
 	UpdateProductRepo(usr models.Product, id string) (models.Product, error)
 	DeleteProductRepo(usr models.Product, id string) (models.Product, error)
+}
+
+type OutletRepoInterface interface {
+	AddOutletRepo(usr models.Outlet) (models.Outlet, error)
+	GetAllOutletsRepo(id string) ([]models.Outlet, error)
+	GetOutletRepo(usr models.Outlet, id string) (models.Outlet, error)
+	UpdateOutletRepo(usr models.Outlet, id string) (models.Outlet, error)
+	DeleteOutletRepo(usr models.Outlet, id string) (models.Outlet, error)
 }
