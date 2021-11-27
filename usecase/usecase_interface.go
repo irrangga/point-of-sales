@@ -9,3 +9,11 @@ type UserUsecaseInterface interface {
 	UpdateUserUsecase(usr models.Merchant, id string) (models.Merchant, error)
 	DeleteUserUsecase(usr models.Merchant, id string) (models.Merchant, error)
 }
+
+type ProductUsecaseInterface interface {
+	AddProductUsecase(usr models.Product) (models.Product, error)
+	GetAllProductsUsecase() ([]models.Product, error)
+	GetProductUsecase(usr models.Product, id string) (models.Product, error)
+	UpdateProductUsecase(usr models.Product, id string) (models.Product, error)
+	DeleteProductUsecase(usr models.Product, id string) (models.Product, error)
+}

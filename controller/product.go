@@ -9,24 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserController struct {
-	usr usecase.UserUsecaseInterface
+type ProductController struct {
+	prod usecase.ProductUsecaseInterface
 }
 
-func NewUserControllerImpl(r *gin.RouterGroup, usr usecase.UserUsecaseInterface) {
-	handler := UserController{usr}
+func NewProductControllerImpl(r *gin.RouterGroup, prod usecase.ProductUsecaseInterface) {
+	handler := ProductController{prod}
 
-	r.POST("/user/register", handler.AddUserController)
-	r.GET("/list_users", handler.GetAllUsersController)
-	r.GET("/user/:id", handler.GetUserController)
-	r.PUT("/user/:id", handler.UpdateUserController)
-	r.DELETE("/user/:id", handler.DeleteUserController)
+	r.POST("/product/insert", handler.AddProductController)
+	r.GET("/list_products", handler.GetAllProductsController)
+	r.GET("/product/:id", handler.GetProductController)
+	r.PUT("/product/:id", handler.UpdateProductController)
+	r.DELETE("/product/:id", handler.DeleteProductController)
 }
 
-func (uc UserController) AddUserController(c *gin.Context) {
-	var usr models.Merchant
+func (uc ProductController) AddProductController(c *gin.Context) {
+	var prod models.Product
 
-	if err := c.ShouldBindJSON(&usr); err != nil {
+	if err := c.ShouldBindJSON(&prod); err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
 			Message: err.Error(),
@@ -34,7 +34,7 @@ func (uc UserController) AddUserController(c *gin.Context) {
 		return
 	}
 
-	userData, err := uc.usr.AddUserUsecase(usr)
+	userData, err := uc.prod.AddProductUsecase(prod)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -52,8 +52,8 @@ func (uc UserController) AddUserController(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc UserController) GetAllUsersController(c *gin.Context) {
-	userData, err := uc.usr.GetAllUsersUsecase()
+func (uc ProductController) GetAllProductsController(c *gin.Context) {
+	userData, err := uc.prod.GetAllProductsUsecase()
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -72,11 +72,11 @@ func (uc UserController) GetAllUsersController(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc UserController) GetUserController(c *gin.Context) {
-	var usr models.Merchant
+func (uc ProductController) GetProductController(c *gin.Context) {
+	var prod models.Product
 	id := c.Param("id")
 
-	userData, err := uc.usr.GetUserUsecase(usr, id)
+	userData, err := uc.prod.GetProductUsecase(prod, id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -94,12 +94,12 @@ func (uc UserController) GetUserController(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc UserController) UpdateUserController(c *gin.Context) {
-	var usr models.Merchant
+func (uc ProductController) UpdateProductController(c *gin.Context) {
+	var prod models.Product
 	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
-	err := c.ShouldBindJSON(&usr)
+	err := c.ShouldBindJSON(&prod)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
@@ -108,7 +108,7 @@ func (uc UserController) UpdateUserController(c *gin.Context) {
 		return
 	}
 
-	userData, err := uc.usr.UpdateUserUsecase(usr, id)
+	userData, err := uc.prod.UpdateProductUsecase(prod, id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
@@ -127,12 +127,12 @@ func (uc UserController) UpdateUserController(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (uc UserController) DeleteUserController(c *gin.Context) {
-	var usr models.Merchant
+func (uc ProductController) DeleteProductController(c *gin.Context) {
+	var prod models.Product
 	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
-	userData, err := uc.usr.DeleteUserUsecase(usr, id)
+	userData, err := uc.prod.DeleteProductUsecase(prod, id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,

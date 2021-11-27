@@ -19,12 +19,15 @@ func NewRouter() *gin.Engine {
 
 	// REPOSITORY DEPENDENCY
 	userRepo := repository.NewUserRepoImpl(DB)
+	productRepo := repository.NewProductRepoImpl(DB)
 
 	// USE CASE DEPENDENCY
-	userUseCase := usecase.NewUserUsecaseImpl(userRepo)
+	userUsecase := usecase.NewUserUsecaseImpl(userRepo)
+	productUsecase := usecase.NewProductUsecaseImpl(productRepo)
 
 	// CONTROLLER DEPENDENCY
-	controller.NewUserControllerImpl(newRoute, userUseCase)
+	controller.NewUserControllerImpl(newRoute, userUsecase)
+	controller.NewProductControllerImpl(newRoute, productUsecase)
 
 	return r
 }
