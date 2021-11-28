@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"point-of-sales/middleware"
 	"point-of-sales/models"
 	"point-of-sales/usecase"
 	"strconv"
@@ -16,11 +17,15 @@ type OutletController struct {
 func NewOutletControllerImpl(r *gin.RouterGroup, out usecase.OutletUsecaseInterface) {
 	handler := OutletController{out}
 
-	r.POST("/outlet/create", handler.AddOutletController)
-	r.GET("/list_outlets", handler.GetAllOutletsController)
-	r.GET("/outlet/:id", handler.GetOutletController)
-	r.PUT("/outlet/:id", handler.UpdateOutletController)
-	r.DELETE("/outlet/:id", handler.DeleteOutletController)
+	auth := r.Group("")
+	auth.Use(middleware.AuthMiddleware().MiddlewareFunc())
+	{
+		auth.POST("/outlet/create", handler.AddOutletController)
+		auth.GET("/list_outlets", handler.GetAllOutletsController)
+		auth.GET("/outlet/:id", handler.GetOutletController)
+		auth.PUT("/outlet/:id", handler.UpdateOutletController)
+		auth.DELETE("/outlet/:id", handler.DeleteOutletController)
+	}
 }
 
 func (oc OutletController) AddOutletController(c *gin.Context) {

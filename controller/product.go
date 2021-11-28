@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"point-of-sales/middleware"
 	"point-of-sales/models"
 	"point-of-sales/usecase"
 	"strconv"
@@ -16,11 +17,15 @@ type ProductController struct {
 func NewProductControllerImpl(r *gin.RouterGroup, prod usecase.ProductUsecaseInterface) {
 	handler := ProductController{prod}
 
-	r.POST("/product/insert", handler.AddProductController)
-	r.GET("/list_products", handler.GetAllProductsController)
-	r.GET("/product/:id", handler.GetProductController)
-	r.PUT("/product/:id", handler.UpdateProductController)
-	r.DELETE("/product/:id", handler.DeleteProductController)
+	auth := r.Group("")
+	auth.Use(middleware.AuthMiddleware().MiddlewareFunc())
+	{
+		auth.POST("/product/insert", handler.AddProductController)
+		auth.GET("/list_products", handler.GetAllProductsController)
+		auth.GET("/product/:id", handler.GetProductController)
+		auth.PUT("/product/:id", handler.UpdateProductController)
+		auth.DELETE("/product/:id", handler.DeleteProductController)
+	}
 }
 
 func (uc ProductController) AddProductController(c *gin.Context) {

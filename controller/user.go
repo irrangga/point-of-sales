@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"point-of-sales/middleware"
 	"point-of-sales/models"
 	"point-of-sales/usecase"
 	"strconv"
@@ -16,11 +17,17 @@ type UserController struct {
 func NewUserControllerImpl(r *gin.RouterGroup, usr usecase.UserUsecaseInterface) {
 	handler := UserController{usr}
 
+	r.POST("/user/login", middleware.AuthMiddleware().LoginHandler)
 	r.POST("/user/register", handler.AddUserController)
-	r.GET("/list_users", handler.GetAllUsersController)
-	r.GET("/user/:id", handler.GetUserController)
-	r.PUT("/user/:id", handler.UpdateUserController)
-	r.DELETE("/user/:id", handler.DeleteUserController)
+
+	auth := r.Group("")
+	auth.Use(middleware.AuthMiddleware().MiddlewareFunc())
+	{
+		auth.GET("/list_users", handler.GetAllUsersController)
+		auth.GET("/user/:id", handler.GetUserController)
+		auth.PUT("/user/:id", handler.UpdateUserController)
+		auth.DELETE("/user/:id", handler.DeleteUserController)
+	}
 }
 
 func (uc UserController) AddUserController(c *gin.Context) {
