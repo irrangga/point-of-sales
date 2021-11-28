@@ -10,28 +10,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ProductController struct {
-	prod usecase.ProductUsecaseInterface
+type PriceController struct {
+	prc usecase.PriceUsecaseInterface
 }
 
-func NewProductControllerImpl(r *gin.RouterGroup, prod usecase.ProductUsecaseInterface) {
-	handler := ProductController{prod}
+func NewPriceControllerImpl(r *gin.RouterGroup, prc usecase.PriceUsecaseInterface) {
+	handler := PriceController{prc}
 
 	auth := r.Group("")
 	auth.Use(middleware.AuthMiddleware().MiddlewareFunc())
 	{
-		auth.POST("/product/insert", handler.AddProductController)
-		auth.GET("/list_products", handler.GetAllProductsController)
-		auth.GET("/product/:id", handler.GetProductController)
-		auth.PUT("/product/:id", handler.UpdateProductController)
-		auth.DELETE("/product/:id", handler.DeleteProductController)
+		auth.POST("/price/insert", handler.AddPriceController)
+		auth.GET("/list_prices", handler.GetAllPricesController)
+		auth.GET("/price/:id", handler.GetPriceController)
+		auth.PUT("/price/:id", handler.UpdatePriceController)
+		auth.DELETE("/price/:id", handler.DeletePriceController)
 	}
 }
 
-func (pc ProductController) AddProductController(c *gin.Context) {
-	var prod models.Product
+func (pc PriceController) AddPriceController(c *gin.Context) {
+	var prc models.Price
 
-	if err := c.ShouldBindJSON(&prod); err != nil {
+	if err := c.ShouldBindJSON(&prc); err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
 			Message: err.Error(),
@@ -39,7 +39,7 @@ func (pc ProductController) AddProductController(c *gin.Context) {
 		return
 	}
 
-	productData, err := pc.prod.AddProductUsecase(prod)
+	priceData, err := pc.prc.AddPriceUsecase(prc)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -52,15 +52,15 @@ func (pc ProductController) AddProductController(c *gin.Context) {
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    productData,
+		Data:    priceData,
 	}
 	c.JSON(http.StatusOK, response)
 }
 
-func (pc ProductController) GetAllProductsController(c *gin.Context) {
-	id := c.Query("merchant_id")
+func (pc PriceController) GetAllPricesController(c *gin.Context) {
+	id := c.Query("product_id")
 
-	productData, err := pc.prod.GetAllProductsUsecase(id)
+	priceData, err := pc.prc.GetAllPricesUsecase(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
@@ -72,17 +72,17 @@ func (pc ProductController) GetAllProductsController(c *gin.Context) {
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    productData,
+		Data:    priceData,
 	}
 
 	c.JSON(http.StatusOK, response)
 }
 
-func (pc ProductController) GetProductController(c *gin.Context) {
-	var prod models.Product
+func (pc PriceController) GetPriceController(c *gin.Context) {
+	var prc models.Price
 	id := c.Param("id")
 
-	productData, err := pc.prod.GetProductUsecase(prod, id)
+	priceData, err := pc.prc.GetPriceUsecase(prc, id)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
@@ -95,50 +95,17 @@ func (pc ProductController) GetProductController(c *gin.Context) {
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    productData,
+		Data:    priceData,
 	}
 	c.JSON(http.StatusOK, response)
 }
 
-func (pc ProductController) UpdateProductController(c *gin.Context) {
-	var prod models.Product
-	id := c.Param("id")
-	idInt, _ := strconv.Atoi(id)
-
-	err := c.ShouldBindJSON(&prod)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
-			Status:  http.StatusBadRequest,
-			Message: err.Error(),
-		})
-		return
-	}
-
-	productData, err := pc.prod.UpdateProductUsecase(prod, id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
-			Status:  http.StatusBadRequest,
-			Message: err.Error(),
-		})
-		return
-	}
-
-	productData.ID = idInt
-
-	response := models.ResponseCustom{
-		Status:  http.StatusOK,
-		Message: "success",
-		Data:    productData,
-	}
-	c.JSON(http.StatusOK, response)
-}
-
-func (pc ProductController) DeleteProductController(c *gin.Context) {
-	var prod models.Product
+func (pc PriceController) UpdatePriceController(c *gin.Context) {
+	var prc models.Price
 	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
-	productData, err := pc.prod.DeleteProductUsecase(prod, id)
+	err := c.ShouldBindJSON(&prc)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
 			Status:  http.StatusBadRequest,
@@ -147,12 +114,45 @@ func (pc ProductController) DeleteProductController(c *gin.Context) {
 		return
 	}
 
-	productData.ID = idInt
+	priceData, err := pc.prc.UpdatePriceUsecase(prc, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	priceData.ID = idInt
 
 	response := models.ResponseCustom{
 		Status:  http.StatusOK,
 		Message: "success",
-		Data:    productData,
+		Data:    priceData,
+	}
+	c.JSON(http.StatusOK, response)
+}
+
+func (pc PriceController) DeletePriceController(c *gin.Context) {
+	var prc models.Price
+	id := c.Param("id")
+	idInt, _ := strconv.Atoi(id)
+
+	priceData, err := pc.prc.DeletePriceUsecase(prc, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ResponseErrorCustom{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	priceData.ID = idInt
+
+	response := models.ResponseCustom{
+		Status:  http.StatusOK,
+		Message: "success",
+		Data:    priceData,
 	}
 	c.JSON(http.StatusOK, response)
 }

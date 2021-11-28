@@ -46,8 +46,9 @@ var IdentityKey = "username"
 func PayloadFunc(data interface{}) jwt.MapClaims {
 	if v, ok := data.(*models.Merchant); ok {
 		return jwt.MapClaims{
-			"email":     v.Email,
-			IdentityKey: v.Username,
+			"email":         v.Email,
+			IdentityKey:     v.Username,
+			"merchant_name": v.MerchantName,
 		}
 	}
 	return jwt.MapClaims{}
@@ -74,8 +75,9 @@ func Authenticator(c *gin.Context) (interface{}, error) {
 
 	if username == usr.Username && password == usr.Password {
 		return &models.Merchant{
-			Email:    usr.Email,
-			Username: usr.Username,
+			Email:        usr.Email,
+			Username:     usr.Username,
+			MerchantName: usr.MerchantName,
 		}, nil
 	}
 

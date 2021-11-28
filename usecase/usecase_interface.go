@@ -11,17 +11,25 @@ type UserUsecaseInterface interface {
 }
 
 type ProductUsecaseInterface interface {
-	AddProductUsecase(usr models.Product) (models.Product, error)
+	AddProductUsecase(prod models.Product) (models.Product, error)
 	GetAllProductsUsecase(id string) ([]models.Product, error)
-	GetProductUsecase(usr models.Product, id string) (models.Product, error)
-	UpdateProductUsecase(usr models.Product, id string) (models.Product, error)
-	DeleteProductUsecase(usr models.Product, id string) (models.Product, error)
+	GetProductUsecase(prod models.Product, id string) (models.Product, error)
+	UpdateProductUsecase(prod models.Product, id string) (models.Product, error)
+	DeleteProductUsecase(prod models.Product, id string) (models.Product, error)
 }
 
 type OutletUsecaseInterface interface {
-	AddOutletUsecase(usr models.Outlet) (models.Outlet, error)
+	AddOutletUsecase(out models.Outlet) (models.Outlet, error)
 	GetAllOutletsUsecase(id string) ([]models.Outlet, error)
-	GetOutletUsecase(usr models.Outlet, id string) (models.Outlet, error)
-	UpdateOutletUsecase(usr models.Outlet, id string) (models.Outlet, error)
-	DeleteOutletUsecase(usr models.Outlet, id string) (models.Outlet, error)
+	GetOutletUsecase(out models.Outlet, id string) (models.Outlet, error)
+	UpdateOutletUsecase(out models.Outlet, id string) (models.Outlet, error)
+	DeleteOutletUsecase(out models.Outlet, id string) (models.Outlet, error)
+}
+
+type PriceUsecaseInterface interface {
+	AddPriceUsecase(prc models.Price) (models.Price, error)
+	GetAllPricesUsecase(id string) ([]models.Price, error)
+	GetPriceUsecase(prc models.Price, id string) (models.Price, error)
+	UpdatePriceUsecase(prc models.Price, id string) (models.Price, error)
+	DeletePriceUsecase(prc models.Price, id string) (models.Price, error)
 }

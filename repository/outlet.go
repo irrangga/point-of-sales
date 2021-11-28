@@ -14,41 +14,41 @@ func NewOutletRepoImpl(db *gorm.DB) OutletRepoInterface {
 	return &OutletRepoStruct{db}
 }
 
-func (pr OutletRepoStruct) AddOutletRepo(out models.Outlet) (models.Outlet, error) {
-	err := pr.db.Debug().Create(&out).Error
+func (or OutletRepoStruct) AddOutletRepo(out models.Outlet) (models.Outlet, error) {
+	err := or.db.Debug().Create(&out).Error
 	if err != nil {
 		return models.Outlet{}, err
 	}
 	return out, nil
 }
 
-func (pr OutletRepoStruct) GetAllOutletsRepo(id string) ([]models.Outlet, error) {
+func (or OutletRepoStruct) GetAllOutletsRepo(id string) ([]models.Outlet, error) {
 	var out []models.Outlet
-	err := pr.db.Debug().Where("merchant_id = ?", id).Find(&out).Error
+	err := or.db.Debug().Where("merchant_id = ?", id).Find(&out).Error
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (pr OutletRepoStruct) GetOutletRepo(out models.Outlet, id string) (models.Outlet, error) {
-	err := pr.db.Debug().Where("id = ?", id).First(&out).Error
+func (or OutletRepoStruct) GetOutletRepo(out models.Outlet, id string) (models.Outlet, error) {
+	err := or.db.Debug().Where("id = ?", id).First(&out).Error
 	if err != nil {
 		return models.Outlet{}, err
 	}
 	return out, nil
 }
 
-func (pr OutletRepoStruct) UpdateOutletRepo(out models.Outlet, id string) (models.Outlet, error) {
-	err := pr.db.Debug().Model(&out).Where("id = ?", id).Updates(&out).Error
+func (or OutletRepoStruct) UpdateOutletRepo(out models.Outlet, id string) (models.Outlet, error) {
+	err := or.db.Debug().Model(&out).Where("id = ?", id).Updates(&out).Error
 	if err != nil {
 		return models.Outlet{}, err
 	}
 	return out, nil
 }
 
-func (pr OutletRepoStruct) DeleteOutletRepo(out models.Outlet, id string) (models.Outlet, error) {
-	err := pr.db.Debug().Where("id = ?", id).Delete(&out).Error
+func (or OutletRepoStruct) DeleteOutletRepo(out models.Outlet, id string) (models.Outlet, error) {
+	err := or.db.Debug().Where("id = ?", id).Delete(&out).Error
 	if err != nil {
 		return models.Outlet{}, err
 	}
